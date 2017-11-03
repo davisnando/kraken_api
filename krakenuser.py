@@ -1,10 +1,10 @@
 """ kraken user class"""
-from krakenapi import Krakenapi
-
+from krakenmarket import KrakenMarket
 
 class KrakenUser:
-    def __init__(self, apikey, apisecret):
-        self.api = Krakenapi(apikey, apisecret)
+    def __init__(self, krakenapi):
+        self.api = krakenapi
+        self.market = KrakenMarket(self.api)
 
     def get_balance(self):
         """ Get account balance  """
@@ -24,7 +24,7 @@ class KrakenUser:
         ratios = {}
         for item in keys:
             pair = orders[item]['descr']['pair']
-            ticker = self.api.public_request('/0/public/Ticker', {'pair': pair})
+            ticker = self.market.get_ticker(pair)
             ticker_key = list(ticker['result'].keys())
             price = ticker['result'][ticker_key[0]]['b'][0]
             ratios[item] = float(price[:-5]) - float(orders[item]['price'])
