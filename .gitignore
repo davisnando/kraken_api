@@ -1,3 +1,4 @@
 settings.py
-.vscode/settings.json
+.vscode/*
 *.pyc
+main.py

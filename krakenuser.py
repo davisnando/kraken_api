@@ -25,7 +25,19 @@ class KrakenUser:
         for item in keys:
             pair = orders[item]['descr']['pair']
             ticker = self.market.get_ticker(pair)
-            ticker_key = list(ticker['result'].keys())
-            price = ticker['result'][ticker_key[0]]['b'][0]
+            price = ticker['b'][0]
             ratios[item] = float(price[:-5]) - float(orders[item]['price'])
         return ratios
+
+    def get_balance_worth(self, in_name):
+        balance = self.get_balance()
+        keys = balance.keys()
+        prices = {}
+        for item in keys:
+            name = self.market.assets[item]['altname']
+            if name != in_name:
+                balance_item = balance[item]
+                ticker = self.market.get_ticker('{0}{1}'.format(name, in_name))
+                amount = float(balance_item) * float(ticker['b'][0][:-5])
+                prices[name] = amount
+        return prices
